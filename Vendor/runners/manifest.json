@@ -1,0 +1,24 @@
+{
+  "runners": [
+    {
+      "kind": "wine-stable",
+      "version": "11.0_1",
+      "asset": "wine-stable-11.0_1-osx64.tar.xz",
+      "sha256": "b50dc50ec7f41d58b115a6b685d4d1315ba3c797bd3aa0f49213f2703cb82388",
+      "size": 185303032,
+      "parts": [
+        "wine-stable-11.0_1-osx64.tar.xz.part-00",
+        "wine-stable-11.0_1-osx64.tar.xz.part-01",
+        "wine-stable-11.0_1-osx64.tar.xz.part-02",
+        "wine-stable-11.0_1-osx64.tar.xz.part-03"
+      ],
+      "source_url": "https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.0_1/wine-stable-11.0_1-osx64.tar.xz"
+    }
+  ],
+  "winetricks": {
+    "file": "winetricks/winetricks",
+    "sha256": "672a1ff4442e8691a3ffc0e6860137e201a1d1227e9b3044245f1731e9e9837e",
+    "version": "20260125-next",
+    "source_url": "https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks"
+  }
+}
