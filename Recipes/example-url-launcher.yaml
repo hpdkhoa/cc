@@ -1,0 +1,22 @@
+name: Example URL-scheme launcher
+slug: example-url-launcher
+version: 1
+runner: { kind: wine, min_version: "10.0" }
+prefix: { arch: win64, windows_version: win7 }
+files:
+  - { id: game_installer, url: "TODO", sha256: "TODO" }
+  - { id: browser,        url: "TODO", sha256: "TODO" }
+winetricks: [corefonts]
+steps:
+  - run: { file: game_installer, args: [] }
+  - run: { file: browser, args: [] }
+  - registry:
+      key: HKEY_CLASSES_ROOT\gamename
+      values: { "": "URL:Game Protocol", "URL Protocol": "" }
+  - registry:
+      key: HKEY_CLASSES_ROOT\gamename\shell\open\command
+      values: { "": '"C:\Program Files\Game\game.exe" "%1"' }
+launch:
+  exe: "drive_c/Program Files/Mozilla Firefox/firefox.exe"
+  args: []
+  env: { WINEDEBUG: "-all" }
