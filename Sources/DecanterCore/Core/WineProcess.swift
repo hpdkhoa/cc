@@ -123,8 +123,10 @@ public final class RunningProcess: @unchecked Sendable {
     /// SIGKILL.
     public func kill() {
         guard isRunning else { return }
-        #if canImport(Glibc) || canImport(Darwin)
-        _ = Foundation.kill(pid, SIGKILL)
+        #if canImport(Darwin)
+        _ = Darwin.kill(pid, SIGKILL)
+        #elseif canImport(Glibc)
+        _ = Glibc.kill(pid, SIGKILL)
         #else
         process.terminate()
         #endif
