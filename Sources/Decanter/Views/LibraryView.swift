@@ -1,7 +1,7 @@
 import SwiftUI
 import DecanterCore
 
-struct LibraryView: View {
+@MainActor struct LibraryView: View {
     @Environment(AppState.self) private var state
     @State private var showAddGame = false
     @State private var path: [UUID] = []

@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 import DecanterCore
 
-struct RunnersView: View {
+@MainActor struct RunnersView: View {
     @Environment(AppState.self) private var state
 
     @State private var bundled: [BundledRunner] = []

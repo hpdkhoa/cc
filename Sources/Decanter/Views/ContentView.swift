@@ -21,7 +21,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     }
 }
 
-struct ContentView: View {
+@MainActor struct ContentView: View {
     @Environment(AppState.self) private var state
     @State private var selection: SidebarItem? = .library
 

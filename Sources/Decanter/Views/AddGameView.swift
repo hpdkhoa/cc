@@ -3,7 +3,7 @@ import AppKit
 import DecanterCore
 
 /// "Add local .exe" wizard: runner, prefix (new or existing), executable.
-struct AddGameView: View {
+@MainActor struct AddGameView: View {
     @Environment(AppState.self) private var state
     @Environment(\.dismiss) private var dismiss
 

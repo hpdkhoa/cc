@@ -3,7 +3,7 @@ import AppKit
 import DecanterCore
 
 /// Live view of `Log.shared`: every command, its env diff, and every output line.
-struct LogConsoleView: View {
+@MainActor struct LogConsoleView: View {
     var title: String = "Logs"
 
     @State private var entries: [LogEntry] = []
@@ -45,7 +45,7 @@ struct LogConsoleView: View {
                     .padding(6)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .onChange(of: entries.count) { _, _ in
+                .onChange(of: entries.last?.id) { _, _ in   // not .count: the buffer is capped
                     if autoscroll, let last = visible.last { proxy.scrollTo(last.id, anchor: .bottom) }
                 }
             }

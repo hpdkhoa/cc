@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 import DecanterCore
 
-struct GameDetailView: View {
+@MainActor struct GameDetailView: View {
     @Environment(AppState.self) private var state
     @Environment(\.dismiss) private var dismiss
     let gameID: UUID

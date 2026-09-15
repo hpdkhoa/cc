@@ -92,8 +92,11 @@ final class AppState {
         guard let prefix = prefix(for: game) else {
             report(PrefixError.notFound(game.prefixName), title: "Cannot launch \(game.name)"); return
         }
+        let id = game.id
+        // Mark running before spawning: a process that dies instantly fires onExit
+        // before launch() returns, and the remove must not race the insert.
+        runningGameIDs.insert(id)
         do {
-            let id = game.id
             try await launcher.launch(game: game, prefix: prefix, runner: runner) { [weak self] _, seconds in
                 await MainActor.run {
                     guard let self else { return }
@@ -105,8 +108,8 @@ final class AppState {
                     }
                 }
             }
-            runningGameIDs.insert(id)
         } catch {
+            runningGameIDs.remove(id)
             report(error, title: "Cannot launch \(game.name)")
         }
     }
