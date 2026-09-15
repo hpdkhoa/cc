@@ -159,20 +159,22 @@ public actor RunnerManager {
 
     // MARK: Vendored runners (offline)
 
-    public func bundledManifest() throws -> (dir: URL, manifest: BundledManifest) {
-        guard let vendor = Paths.vendorDir else { throw RunnerError.noVendorDir }
+    /// `vendorDir` defaults to `Paths.vendorDir`; tests pass their own.
+    public func bundledManifest(vendorDir: URL? = nil) throws -> (dir: URL, manifest: BundledManifest) {
+        guard let vendor = vendorDir ?? Paths.vendorDir else { throw RunnerError.noVendorDir }
         let data = try Data(contentsOf: vendor.appendingPathComponent("runners/manifest.json"))
         return (vendor, try JSONDecoder().decode(BundledManifest.self, from: data))
     }
 
-    public func bundledRunners() -> [BundledRunner] {
-        (try? bundledManifest().manifest.runners) ?? []
+    public func bundledRunners(vendorDir: URL? = nil) -> [BundledRunner] {
+        (try? bundledManifest(vendorDir: vendorDir).manifest.runners) ?? []
     }
 
     /// Reassemble the split tarball into `cache/`, check its SHA-256, then install.
-    public func installBundled(_ bundled: BundledRunner, progress: @escaping @Sendable (InstallProgress) -> Void) async throws -> Runner {
+    public func installBundled(_ bundled: BundledRunner, vendorDir: URL? = nil,
+                               progress: @escaping @Sendable (InstallProgress) -> Void) async throws -> Runner {
         if installed().contains(where: { $0.id == bundled.id }) { throw RunnerError.alreadyInstalled(bundled.id) }
-        let (vendor, _) = try bundledManifest()
+        let (vendor, _) = try bundledManifest(vendorDir: vendorDir)
         let partsDir = vendor.appendingPathComponent("runners", isDirectory: true)
         let archive = Paths.cache.appendingPathComponent(bundled.asset)
         try fm.createDirectory(at: Paths.cache, withIntermediateDirectories: true)

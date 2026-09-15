@@ -180,7 +180,15 @@ public enum WineProcess {
         }
 
         let diff = spec.environmentDiff
-        let envText = diff.keys.sorted().map { "\($0)=\(CommandSpec.shellQuote(diff[$0] ?? ""))" }.joined(separator: " ")
+        let basePath = ProcessInfo.processInfo.environment["PATH"] ?? ""
+        let envText = diff.keys.sorted().map { key -> String in
+            var value = diff[key] ?? ""
+            // PATH is always "runner bin + inherited PATH"; keep the log readable.
+            if key == "PATH", !basePath.isEmpty, value.hasSuffix(":" + basePath) {
+                value = String(value.dropLast(basePath.count)) + "$PATH"
+            }
+            return "\(key)=\(CommandSpec.shellQuote(value))"
+        }.joined(separator: " ")
         log.command(label, "$ " + (envText.isEmpty ? "" : envText + " ") + spec.commandLine
                     + (spec.currentDirectory.map { "   (cwd: \($0.path))" } ?? ""))
 
